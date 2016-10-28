@@ -33,7 +33,14 @@
       is: 'clasificacion-item',
 
       properties: {
-        clasificacion: Object
+        clasificacion: Object,
+      },
+
+      borrarItem: function() {
+        this.fire('borrar-clasificacion', this.clasificacion);
+      },
+      editarItem: function() {
+        this.fire('editar-clasificacion', this.clasificacion);
       }
     });
   </script>

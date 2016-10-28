@@ -1,0 +1,39 @@
+<dom-module id="clasificacion-formulario">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      .cuerpo{
+       
+      }
+    </style>
+    <div class="cuerpo">
+      <paper-input 
+          required 
+          auto-validate 
+          error-message="2 o más caracteres" 
+          id="inputnombre" 
+          label="Nombre" 
+          value="{{elemento.nombre}}"
+      ></paper-input>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: 'clasificacion-formulario',
+      
+      properties: {
+        elemento: {
+          type: Object,
+          notify: true,
+          value: function() {
+            return {
+              nombre: ''
+            }
+          }
+        }
+      }
+    });
+  </script>
+</dom-module>

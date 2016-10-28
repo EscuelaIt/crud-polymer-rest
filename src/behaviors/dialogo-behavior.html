@@ -1,0 +1,16 @@
+<script>
+/**
+ * Ese componente asume que tenemos un elemento #dialog (Un elemento de la página tiene el id="dialogo") 
+ */
+DialogoBehavior = {
+  open: function() {
+    this.$.dialogo.open();
+    //console.log('abriendo dialogo', this.$.dialogo);
+  },
+  close: function() {
+    this.$.dialogo.close();
+    //console.log('abriendo dialogo', this.$.dialogo);
+  },
+
+};
+</script>

@@ -1,0 +1,65 @@
+
+<dom-module id="clasificacion-borrar">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    
+    <iron-ajax
+      id="elajax"
+      url="http://localhost:3000/clasificaciones/[[id]]"
+      method="DELETE"
+      handle-as="json"
+      on-response="handleResponse"
+      on-error="handleError"
+    ></iron-ajax>
+
+    <paper-dialog id="dialogo">
+      <h2>Borrar</h2>
+        <div class="cuerpo">
+          ¿De verdad deseas borrar <b>[[que]]</b>?
+        </div>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancelar</paper-button>
+        <paper-button on-tap="borrar">Borrar</paper-button>
+      </div>
+    </paper-dialog>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'clasificacion-borrar',
+
+      behaviors: [DialogoBehavior, EmisorFeedbackBehavior],
+
+      properties: {
+        id: Number,
+        que: String
+      },
+
+      borrar: function() {
+        this.$.elajax.generateRequest();
+      },
+
+      handleResponse: function(e, res) {
+        console.log(res.status, res.succeeded, res.response, res.timedOut)
+        if(res.status == 200) {
+          this.feedbackPositivo('Borrada una clasificación')
+          this.close()
+          this.fire('actualizar-listado')
+        } else {
+          this.feedbackNegativo('El servidor devolvió un código de error')
+        }
+      },
+
+      handleError: function(e, res) {
+        this.feedbackNegativo('Error al intentar el borrado')
+      },
+
+      
+
+    });
+  </script>
+</dom-module>

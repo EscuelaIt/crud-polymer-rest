@@ -12,14 +12,11 @@
         display: block;
        
       }
+      /*https://github.com/PolymerElements/paper-dialog-behavior/pull/56*/
       paper-dialog{
-        width: 80vw;
-        z-index: 1000000000;
-      }
-      paper-dialog-scrollable{
-      }
-      .cuerpo{
-        min-height: 200px;
+        --paper-dialog: {
+          width: 60vw;
+        }
       }
       h2{
         color: var(--app-primary-color);
@@ -29,7 +26,7 @@
     
     <iron-ajax
        id="elajax"
-       url="http://localhost:3000/clasificaciones/"
+       url="[[urlApiPelis]]clasificaciones/"
        method="POST"
        handle-as="json"
        body="{{clasificacion}}"
@@ -40,11 +37,9 @@
 
     <paper-dialog id="dialogo">
       <h2>Insertar Clasificacion</h2>
-      <paper-dialog-scrollable>
-        <div class="cuerpo">
-          <paper-input required auto-validate error-message="2 o más caracteres" id="inputnombre" label="Nombre" value="{{clasificacion.nombre}}"></paper-input>
-        </div>
-      </paper-dialog-scrollable>
+      <clasificacion-formulario
+        elemento="{{clasificacion}}"
+      ></clasificacion-formulario>
       <div class="buttons">
         <paper-button dialog-dismiss>Cancel</paper-button>
         <paper-button on-tap="insertar">Accept</paper-button>
@@ -56,6 +51,8 @@
   <script>
     Polymer({
       is: 'clasificacion-insertar',
+
+      behaviors: [DialogoBehavior, ApiBehavior, EmisorFeedbackBehavior, ValidadorBehavior],
 
       properties: {
         clasificacion: {
@@ -71,7 +68,7 @@
       insertar: function(e) {
         if(!this.validarNombre(this.clasificacion.nombre)){
           this.$.inputnombre.invalid = true;
-          this.feedbakNegativo('El nombre no es válido')
+          this.feedbackPositivo('El nombre no es válido')
           return false;
         }
         this.$.elajax.generateRequest();
@@ -81,34 +78,14 @@
       handleResponse: function(e, result) {
         console.log('respuesta recibida', result);
         if(result.status == 201){
-          this.feedbakPositivo('Insertado');
+          this.feedbackPositivo('Insertado');
           this.fire('actualizar-listado');
           this.close();
         } else {
-          this.feedbakNegativo('Error de inserción')
+          this.feedbackNegativo('Error de inserción')
         }
       },
 
-      open: function() {
-        this.$.dialogo.open();
-      },
-      close: function() {
-        this.$.dialogo.close();
-      },
-
-      validarNombre: function(nombre) {
-        if(nombre.length > 2) {
-          return true
-        }
-        return false
-      },
-
-      feedbakNegativo: function(texto) {
-        this.fire('feedback-negativo', texto)
-      },
-      feedbakPositivo: function(texto) {
-        this.fire('feedback-positivo', texto)
-      },
     });
   </script>
 </dom-module>
