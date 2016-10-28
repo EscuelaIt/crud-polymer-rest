@@ -1,0 +1,114 @@
+
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+
+<dom-module id="clasificacion-insertar">
+  <template>
+    <style>
+      :host {
+        display: block;
+       
+      }
+      paper-dialog{
+        width: 80vw;
+        z-index: 1000000000;
+      }
+      paper-dialog-scrollable{
+      }
+      .cuerpo{
+        min-height: 200px;
+      }
+      h2{
+        color: var(--app-primary-color);
+      }
+    </style>
+    
+    
+    <iron-ajax
+       id="elajax"
+       url="http://localhost:3000/clasificaciones/"
+       method="POST"
+       handle-as="json"
+       body="{{clasificacion}}"
+       content-type="application/json"
+       on-response="handleResponse"
+    ></iron-ajax>
+    
+
+    <paper-dialog id="dialogo">
+      <h2>Insertar Clasificacion</h2>
+      <paper-dialog-scrollable>
+        <div class="cuerpo">
+          <paper-input required auto-validate error-message="2 o más caracteres" id="inputnombre" label="Nombre" value="{{clasificacion.nombre}}"></paper-input>
+        </div>
+      </paper-dialog-scrollable>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button on-tap="insertar">Accept</paper-button>
+      </div>
+    </paper-dialog>
+
+
+  </template>
+  <script>
+    Polymer({
+      is: 'clasificacion-insertar',
+
+      properties: {
+        clasificacion: {
+          type: Object,
+          value: function(){
+            return {
+              nombre: ''
+            }
+          }
+        }
+      },
+
+      insertar: function(e) {
+        if(!this.validarNombre(this.clasificacion.nombre)){
+          this.$.inputnombre.invalid = true;
+          this.feedbakNegativo('El nombre no es válido')
+          return false;
+        }
+        this.$.elajax.generateRequest();
+      },
+
+
+      handleResponse: function(e, result) {
+        console.log('respuesta recibida', result);
+        if(result.status == 201){
+          this.feedbakPositivo('Insertado');
+          this.fire('actualizar-listado');
+          this.close();
+        } else {
+          this.feedbakNegativo('Error de inserción')
+        }
+      },
+
+      open: function() {
+        this.$.dialogo.open();
+      },
+      close: function() {
+        this.$.dialogo.close();
+      },
+
+      validarNombre: function(nombre) {
+        if(nombre.length > 2) {
+          return true
+        }
+        return false
+      },
+
+      feedbakNegativo: function(texto) {
+        this.fire('feedback-negativo', texto)
+      },
+      feedbakPositivo: function(texto) {
+        this.fire('feedback-positivo', texto)
+      },
+    });
+  </script>
+</dom-module>

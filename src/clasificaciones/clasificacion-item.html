@@ -1,0 +1,40 @@
+
+<link rel="import" href="../../bower_components/paper-item/paper-icon-item.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item-body.html">
+
+
+<dom-module id="clasificacion-item">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      paper-icon-button, iron-icon{
+        color: var(--app-primary-color)
+      }
+      .botonborrar {
+        color: #933;
+      }
+      .botoneditar {
+        color: #393;
+      }
+    </style>
+    <paper-icon-item>
+      <iron-icon icon="label" item-icon></iron-icon>
+      <paper-item-body>
+        [[clasificacion.nombre]]
+      </paper-item-body>
+      <paper-icon-button icon="create" class="botoneditar" on-tap="editarItem"></paper-icon-button>
+      <paper-icon-button icon="cancel" class="botonborrar" on-tap="borrarItem"></paper-icon-button>
+    </paper-icon-item>
+  </template>
+  <script>
+    Polymer({
+      is: 'clasificacion-item',
+
+      properties: {
+        clasificacion: Object
+      }
+    });
+  </script>
+</dom-module>
